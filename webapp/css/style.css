@@ -1,0 +1,8 @@
+/*Landing page background-color*/
+/*.jtcInvMasterHeader {
+  background: linear-gradient(45deg, rgba(255,248,220,1) 0%, rgba(255,178,221,1) 100%);
+}*/
+
+.jtcInvMasterHeader {
+  background: linear-gradient(45deg, rgb(63, 127, 191,1) 0%, rgba(255,178,221,1) 100%);
+}

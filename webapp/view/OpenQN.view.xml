@@ -1,0 +1,97 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core" xmlns:commons="sap.suite.ui.commons" xmlns:x="sap.f" controllerName="sg.gov.jtc.JTC-InvoiceApp.controller.OpenQN"
+	height="100%" afterRendering=".onAfterViewRendered" busy="{/view/processViewBusy}">
+	<ObjectPageLayout upperCaseAnchorBar="false" showFooter="true" headerContentPinnable="false">
+		<headerTitle>
+			<ObjectPageHeader objectTitle="{/invDoc/header/invCategoryRx} {/invDoc/header/invRefnum} {/invDoc/header/invRefdateRx}" id="idPageHeader">
+				<actions>
+					<m:Button text="Email Inv to Vendor" type="Ghost" tooltip="Email Invoice to Vendor" press=".handleEmail"
+						visible="{/view/emailButtonVisible}"/>
+					<m:Button text="Print" type="Ghost" tooltip="Print invoice" press="handlePrintInvoice"/>
+					<m:Button text="Related Documents" type="Ghost" tooltip="Show related documents" press=".handleRelatedDocuments"/>
+					<!--					<m:Button text="Add Credit Notes" type="Ghost" tooltip="Add credit notes" press=".handleShowCreditNotes" visible="{/view/cnButtonVisible}"
+						enabled="{/view/roEditMode}"/>-->
+					<m:Button text="{/view/txtCNLkInv}" type="Ghost" tooltip="Add credit notes" press=".handleShowCreditNotes" visible="true"
+						enabled="{/view/roEditMode}"/>
+					<!--					<m:Button text="Print" type="Ghost" icon="sap-icon://print" tooltip="Print invoice" press="handlePrintInvoice"/>
+					<m:Button text="Related Documents" type="Ghost" icon="sap-icon://copy" tooltip="Show related documents" press=".handleRelatedDocuments"/>
+					<m:Button text="Add Credit Notes" type="Ghost" tooltip="Add credit notes" press=".handleShowCreditNotes" visible="{/view/cnButtonVisible}"
+						enabled="{/view/roEditMode}"/>-->
+				</actions>
+			</ObjectPageHeader>
+		</headerTitle>
+		<headerContent>
+			<l:VerticalLayout width="96%">
+				<m:HBox visible="true" width="100%" displayInline="false" renderType="Div" justifyContent="SpaceBetween" height="auto" fitContainer="false"
+					direction="Row" alignItems="Start">
+					<m:Text id="hdrtitle" visible="true" text="{/invDoc/header/description}" textDirection="Inherit" textAlign="Begin" wrapping="true"
+						class="jtcInvHeaderTitle" width="63rem"/>
+					<!--<m:Text text="{/invDoc/header/currency} {/invDoc/total/netPayment/postGstAmt}" class="jtcInvHeaderTitle"/>-->
+					<m:Text text="{/invDoc/header/currency} {/invDoc/total/lines/postGstAmt}" class="jtcInvHeaderTitle"/>
+				</m:HBox>
+				<m:HBox height="2em"/>
+				<m:Text text="{/invDoc/header/vendorNameInt}"/>
+				<!--<m:Text text="Attention To: {/invDoc/header/attentionTo} ({/invDoc/header/purchGrp})"/> swami 25.08.2020-->
+				<m:Text text=" {/invDoc/header/attnTextRx}: {/invDoc/header/attentionTo} ({/invDoc/header/purchGrp})"/>
+				<m:HBox height="2em"/>
+				<m:VBox>
+					<m:HBox height="6em">
+						<m:VBox width="100%">
+							<!--							<m:ScrollContainer id="scroll-wf-history" horizontal="true">-->
+							<!-- <m:VBox height="2em" justifyContent="Center">
+                                    <m:Text text="Workflow History Log" textAlign="Begin" width="100%"/>
+                                </m:VBox> -->
+							<m:HBox height="auto" backgroundDesign="Transparent">
+								<!-- <m:Text text="(To be implemented)"/> -->
+								<commons:MicroProcessFlow content="{/invDoc/workflowHistory}" renderType="NoWrap" width="75.6rem" id="idWorkFlowHistoryLog">
+									<commons:content >
+										<commons:MicroProcessFlowItem state="{State}" icon="{Icon}" showIntermediary="true" press="onPressSubmitNode">
+											<commons:intermediary class="appr">
+												<!--												<m:HBox class="appr">
+													<m:Label text="{Action}"/>
+													<m:Link class="appr_link" text="{AgentName}" press="onPressSubmitNode"/>
+												</m:HBox>-->
+												<m:FlexBox class="appr">
+													<m:Label class="appr_action sapUiNoContentPadding sapUiNoMarginBegin sapUiTinyMarginEnd" text="{Action}" visible="{= %{Action} !== '' }"/>
+													<m:Link text="{AgentName}" visible="{= %{Action} === '' }" press="onPressSubmitNode" class="appr_link appr_2lines"/>
+												</m:FlexBox>
+												<!--<FlexBox class="appr" direction="Column">
+                                                        <Title id="WrappingTitle" wrapping="true" text="{ApproverName}"/>
+                                                    </FlexBox>-->
+											</commons:intermediary>
+										</commons:MicroProcessFlowItem>
+									</commons:content>
+								</commons:MicroProcessFlow>
+							</m:HBox>
+							<!--							</m:ScrollContainer>-->
+						</m:VBox>
+						<m:VBox width="50%" visible="false">
+							<m:VBox width="100%" justifyContent="End" height="4em" alignItems="End">
+								<m:Button text="Attachment{att>Total}" press="handleAttachment" id="idBtnAttachment"/>
+							</m:VBox>
+						</m:VBox>
+					</m:HBox>
+					<m:HBox id="idAttachmentBox" alignItems="Start" justifyContent="Start" items="{att>AttachmentSet}" visible="false">
+						<m:items>
+							<m:VBox class="fileItemVBox" width="5rem">
+								<core:Icon press="getLink" size="2rem" src="{ path: 'att>Mimetype', formatter: '.formatter.getIcon' }"
+									class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"/>
+								<m:Link class="fileItemLink" text="{att>Zdesc}" target="_blank" tooltip="{att>Zfname}"
+									href="/sap/opu/odata/sap/ZMMP_INV_ODATA_SRV/FileContentSet(ObjNo='{att>ObjNo}',Zattchid='{att>Zattchid}')/$value"/>
+							</m:VBox>
+						</m:items>
+					</m:HBox>
+				</m:VBox>
+			</l:VerticalLayout>
+		</headerContent>
+		<footer>
+			<m:OverflowToolbar id="proc-foot-buttons" class="jtcInvFooterToolbar">
+				<m:Button id="btnSave" text="Save" width="8rem" type="Emphasized" press=".handleSaveInvoice('SAVE')" class="jtcInvFooterButton"/>
+				<m:Button id="btnCancel" text="Cancel" width="8rem" press=".handleCancelInvoice" type="Ghost" class="jtcInvGhostButton"/>
+				<m:Button id="btnSubmit" text="{/view/txtSubmit}" width="8rem" press=".handleContWarn('SUBMIT')" type="Ghost" class="jtcInvGhostButton"
+					visible="{/view/submitButtonVisible}"/>
+				<m:Button id="btnExit" text="Exit" width="8rem" press="handleExit" type="Ghost" class="jtcInvGhostButton"/>
+			</m:OverflowToolbar>
+		</footer>
+	</ObjectPageLayout>
+</mvc:View>

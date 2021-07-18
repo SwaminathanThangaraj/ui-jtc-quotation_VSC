@@ -1,0 +1,89 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core" xmlns:commons="sap.suite.ui.commons" xmlns:x="sap.f" controllerName="sg.gov.jtc.JTC-QNApp.controller.Master"
+	height="100%" afterRendering=".onAfterViewRendered" busy="{/view/processViewBusy}">
+	<ObjectPageLayout upperCaseAnchorBar="false" showFooter="true" headerContentPinnable="false">
+		<headerTitle>
+			<ObjectPageHeader objectTitle="Quotation Creation" >
+			</ObjectPageHeader>
+		</headerTitle>
+		
+		<sections>
+			<ObjectPageSection title="1. Open Invitation" visible="true" class="jtcInvSectionTitle">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							<m:VBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="Open Quotation" width="13rem" press=".onCreateOpenQNPress"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="Open Quotation by MA" width="13rem"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+							</m:VBox>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			
+			<ObjectPageSection title="2. Limited Competition" visible="true" class="jtcInvSectionTitle">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							<m:VBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="Limitted Quotation" width="13rem"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="JTC FA (Within a Panel)" width="13rem"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="RFQ(IDA Bulk Tender)" width="13rem"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="Direct Contracting" width="13rem"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+								<m:HBox>
+									<m:HBox width="32rem" justifyContent="SpaceBetween">
+										<m:HBox alignItems="Center" height="2rem">
+											<m:Button text="Limitted Quotation by MA" width="13rem"/>
+										</m:HBox>
+									</m:HBox>
+								</m:HBox>
+							</m:VBox>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			
+		</sections>
+		<footer>
+			<m:OverflowToolbar id="proc-foot-buttons" class="jtcInvFooterToolbar">
+				<m:Button id="btnExit" text="Exit" width="8rem" press="handleExit" type="Ghost" class="jtcInvGhostButton"/>
+			</m:OverflowToolbar>
+		</footer>
+	</ObjectPageLayout>
+</mvc:View>

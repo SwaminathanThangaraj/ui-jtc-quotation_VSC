@@ -1,0 +1,160 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="sg.gov.jtc.JTC-QNApp.controller.Master"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="{i18n>appTitle}">
+		<headerContent/>
+		<subHeader/>
+		<content>
+			<VBox class="jtcInvMasterHeader">
+				<HBox class="sapUiNoMargin sapUiNoContentPadding" justifyContent="SpaceBetween">
+					<HBox class="sapUiResponsiveMargin sapUiNoContentPadding">
+						<VBox width="15.5rem" class="sapUiTinyMarginTop sapUiNoMarginBegin sapUiSmallMarginEnd">
+							<Label text="Search"/>
+							<HBox>
+								<MultiInput id="IdSearchFieldMI" width="14.0rem" liveChange="onSearch" tokenChange="handleSearchFieldMIChange" enableMultiLineMode="true"
+									showValueHelp="false"/>
+								<Button icon="sap-icon://search" tooltip="Search" press="onSearch"/>
+							</HBox>
+						</VBox>
+						<VBox width="15.5rem" class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+							<Label text="QNtion Date"/>
+							<DateRangeSelection id="dateRangeSelection" delimiter="to" displayFormat="{/search/dateFormat}" dateValue="{/search/invDateLow}"
+								change=".onSearch" secondDateValue="{/search/invDateHigh}" placeholder="Select date" busy="{/view/searchIsRunning}"
+								class="jtcInvRoundCorners"/>
+						</VBox>
+						<VBox width="15.5rem" class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+							<Label text="Requestor"/>
+							<MultiInput width="15.625rem" maxSuggestionWidth="34rem" class="jtcInvMasterSelect jtcInvRoundCorners" suggestionItems="{/userStore/users}"
+								enableMultiLineMode="true" tokens="{/search/requestors}" tokenUpdate="handleRequestorsChange" id="search-requestors"
+								busy="{/view/searchIsRunning}" valueHelpRequest=".handleValueHelpRequestors">
+								<tokens>
+									<Token key="{UserID}" text="{FullName}"/>
+								</tokens>
+								<core:ListItem key="{UserID}" text="{FullName}" additionalText="{UserID}"/>
+							</MultiInput>
+						</VBox>
+						<VBox class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+							<Label text=""/>
+							<VBox justifyContent="Center" height="2.3rem">
+								<Link text="Reset Filters" press=".handleResetFilters" class="jtcInvMasterLink" busy="{/view/searchIsRunning}"/>
+							</VBox>
+						</VBox>
+						<VBox class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+							<Label text=""/>
+							<VBox justifyContent="Center" height="2.3rem">
+								<Link text="Advanced Search" press=".handleToggleAdvancedSearch" class="jtcInvMasterLink"/>
+							</VBox>
+						</VBox>
+					</HBox>
+					<HBox class="sapUiResponsiveMargin sapUiNoContentPadding">
+						<VBox class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginEnd">
+							<Label text=""/>
+							<Button text="Help" press=".handleHelpPress"/>
+						</VBox>
+					</HBox>
+				</HBox>
+				<!-- Advanced Search -->
+				<!--visible="{/view/advancedSearchVisible}">-->
+				<HBox class="sapUiResponsiveMargin sapUiNoContentPadding jtcInvAdvancedSearch" justifyContent="Start"
+					visible="false">
+					<VBox width="15.5rem" class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+						<Label text="Purchasing Group"/>
+						<ComboBox id="IDPurGrp" selectionChange=".onSearch" items="{/aux/purchasingGroups}" width="100%"
+							class="jtcInvMasterSelect jtcInvRoundCorners" selectedKey="{/search/purchasingGroup}" busy="{/view/searchIsRunning}">
+							<core:Item key="{ekgrp}" text="{ekgrp}"/>
+						</ComboBox>
+					</VBox>
+					<VBox width="15.5rem" class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+						<Label text="Status"/>
+						<ComboBox id="IDStatus" selectionChange=".onSearch" width="100%" class="jtcInvMasterSelect jtcInvRoundCorners"
+							items="{/statusStore/statuses}" selectedKey="{/search/status}" busy="{/view/searchIsRunning}">
+							<core:Item key="{Status}" text="{StatusText}"/>
+						</ComboBox>
+					</VBox>
+					<VBox width="15.5rem" class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiSmallMarginEnd">
+						<Label text="Action Required By"/>
+						<ComboBox id="IDActReqBy" selectionChange=".onSearch" width="100%" class="jtcInvMasterSelect jtcInvRoundCorners"
+							busy="{/view/searchIsRunning}" items="{/aux/invoiceApprovingOfficersAll}" selectedKey="{/search/actionRequiredBy}">
+							<core:Item key="{userId}" text="{fullname}"/>
+						</ComboBox>
+					</VBox>
+				</HBox>
+			</VBox>
+			<VBox class="sapUiResponsiveMargin">
+				<OverflowToolbar width="auto" height="auto" design="Transparent" visible="true" enabled="true" class="jtcInvMasterToolbar"
+					busy="{/view/masterTableBusy}">
+					<content>
+						<!--: {/view/masterTableTitle}     worklistView>/worklistTableTitle -->
+						<Title text="{worklistView>/worklistTableTitle}" titleStyle="Auto" width="auto" textAlign="Begin" visible="true" wrapping="false"/>
+						<ToolbarSpacer width=""/>
+						<Button text="+ Create" press=".onCreatePress" type="Emphasized" width="auto" enabled="true"
+							tooltip="Create Quotation" class=""/>
+						<Button busy="{/view/searchIsRunningforXLS}" text="Export" id="btn-export" press=".handleExport" type="Emphasized" width="auto"
+							enabled="true" tooltip="Export to Excel" class="" icon="sap-icon://excel-attachment"/>
+					</content>
+				</OverflowToolbar>
+				<ScrollContainer vertical="false" horizontal="true">
+					<Table noDataText="No data" id="qnListTable" growing="true" items="{ path: 'qn>/QuotationSet'}" updateFinished="onUpdateFinished"
+						width="auto" mode="None" busy="{/view/masterTableBusy}" sticky="ColumnHeaders" growingThreshold="10">
+						<headerToolbar></headerToolbar>
+						<columns>
+							<Column width="10em">
+								<header>
+									<Text text="Quotation No"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="Title"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="Procurement Approach"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="Construction/Non-Construction"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="Cluster/Division"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="Requestor"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="EPV ($)"/>
+								</header>
+							</Column>
+							<Column width="10em">
+								<header>
+									<Text text="Status"/>
+								</header>
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem type="Active" press=".onQNSelect" vAlign="Top">
+								<cells>
+									<Text text="{qn>DocNum}"/>
+									<Text text="{qn>ShortTitle}"/>
+									<Text text="{qn>PrApr}"/>
+									<Text text="{qn>ConNon}"/>
+									<Text text="{qn>RqEkgrp}"/>
+									<Text text="{qn>RqUserName}"/>
+									<Text text="{qn>TotalEpv}"/>
+									<Text text="{qn>Status}"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</ScrollContainer>
+			</VBox>
+		</content>
+	</Page>
+</mvc:View>

@@ -1,0 +1,99 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="sg.gov.jtc.JTC-QNApp.controller.Master"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<App>
+		<pages>
+			<Page title="{i18n>appTitle}">
+				<content>
+					
+					<Table noDataText="No data" id="invoiceListTable" growing="true"
+						items="{ path: 'inv>/InvoiceSet' , sorter: [{path:'Status'},{path:'InvoiceReferenceDate', descending: true}] }"
+						updateFinished="onUpdateFinished" width="auto" mode="None" busy="{/view/masterTableBusy}" sticky="ColumnHeaders" growingThreshold="10">
+						<headerToolbar></headerToolbar>
+						<columns>
+							<Column width="10em">
+								<header>
+									<Text text="Inv/CN No."/>
+								</header>
+							</Column>
+							<Column width="6.15em">
+								<header>
+									<Text text="Inv/CN Date" tooltip="Inv/CN Date" wrapping="false"/>
+								</header>
+							</Column>
+							<Column width="10.25em">
+								<header>
+									<Text text="Vendor"/>
+								</header>
+							</Column>
+							<Column width="{/view/roWidth}">
+								<header>
+									<Text text="Description"/>
+								</header>
+							</Column>
+							<Column width="7em">
+								<header>
+									<Text text="Requestor"/>
+								</header>
+							</Column>
+							<Column width="9.5em" hAlign="Center">
+								<header>
+									<Text text="Status"/>
+								</header>
+							</Column>
+							<Column width="6.5em" hAlign="End">
+								<header>
+									<Text text="Amount ($)"/>
+								</header>
+							</Column>
+							<Column width="6em">
+								<header>
+									<Text text="Act.ReqBy" tooltip="Action required by" wrapping="false"/>
+								</header>
+							</Column>
+							<Column width="4em">
+								<header>
+									<Text text="Pur.Grp" tooltip="Purchasing Group" wrapping="false"/>
+								</header>
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem type="Active" press=".onInvoiceSelect" vAlign="Top">
+								<cells>
+									<Text text="{inv>InvoiceReference}" id="textInvoiceReference"/>
+									<!--<Text text="{invoiceReferenceDateFormatted}"/>-->
+									<Text text="{inv>InvoiceReferenceDateFormatted}"/>
+									<Text text="{inv>VendorNameInterface}"/>
+									<VBox>
+										<ObjectIdentifier text="{inv>Description}"/>
+									</VBox>
+									<!--<Text text="{requestorName}"/>-->
+									<Text text="{inv>RequestorName}"/>
+									<HBox alignItems="Center" width="">
+										<!--										<Text text="{statusText}" class="cellStatus">
+											<customData>
+												<core:CustomData key="style-class" value="{statusText}" writeToDom="{= ${statusText} ? true : false }"/>
+											</customData>
+										</Text>-->
+										<Text text="{inv>StatusText}" class="cellStatus">
+											<customData>
+												<core:CustomData key="style-class" value="{inv>StatusText}" writeToDom="{= ${inv>StatusText} ? true : false }"/>
+											</customData>
+										</Text>
+									</HBox>
+									<!--<Text text="{netAmountFormatted}"/>-->
+									<Text
+										text="{ parts:[{path:'inv>AmountAfterGst'},{path:'inv>Currency'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false} }"/>
+									<!--<Text text="{actionRequiredBy}"/>-->
+									<Text text="{inv>ActionRequiredBy}"/>
+									<Text text="{inv>PurchasingGroup}"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+					
+					
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>
